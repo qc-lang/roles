@@ -30,7 +30,11 @@ func register(rls ...Role) {
 }
 
 // Load loads all role from a folder.
-func Load(folder string) error {
+func Load(folder string, marshaler gophig.Marshaler) error {
+	if marshaler == nil {
+		marshaler = gophig.JSONMarshaler{}
+	}
+
 	folder = strings.TrimSuffix(folder, "/")
 	files, err := os.ReadDir(folder)
 	if err != nil {
@@ -42,7 +46,7 @@ func Load(folder string) error {
 		if file.IsDir() {
 			continue
 		}
-		r, err := loadRole(folder + "/" + file.Name())
+		r, err := loadRole(folder+"/"+file.Name(), marshaler)
 		if err != nil {
 			return errors.New(fmt.Sprintf("error loading role %s: %v", file.Name(), err))
 		}
@@ -90,9 +94,9 @@ type roleData struct {
 }
 
 // loadRole loads a role from a file.
-func loadRole(filePath string) (Role, error) {
+func loadRole(filePath string, marshaler gophig.Marshaler) (Role, error) {
 	var data roleData
-	err := gophig.GetConfComplex(filePath, gophig.JSONMarshaler{}, &data)
+	err := gophig.GetConfComplex(filePath, marshaler, &data)
 	if err != nil {
 		return Role{}, err
 	}
