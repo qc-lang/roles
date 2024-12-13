@@ -3,7 +3,7 @@ package role
 import (
 	"errors"
 	"fmt"
-	"github.com/restartfu/gophig"
+	"git.restartfu.com/restart/gophig.git"
 	"os"
 	"sort"
 	"strings"
@@ -95,8 +95,7 @@ type roleData struct {
 
 // loadRole loads a role from a file.
 func loadRole(filePath string, marshaler gophig.Marshaler) (Role, error) {
-	var data roleData
-	err := gophig.GetConfComplex(filePath, marshaler, &data)
+	data, err := gophig.LoadConf[roleData](filePath, marshaler)
 	if err != nil {
 		return Role{}, err
 	}

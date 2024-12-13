@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/restartfu/gophig"
+	"git.restartfu.com/restart/gophig.git"
 )
 
 type singularRoleData struct {
